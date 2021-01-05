@@ -117,3 +117,9 @@ if [[ -z "${ROOT_DIR}" ]]; then
 	exit 1
 fi
 
+declare -r PLASMOID_ROOT="$(findAppletSrcDir "$(pwd)")"
+if [[ -z "${PLASMOID_ROOT}" ]]; then
+	echo "*** Unable to locate applet source dir from $(pwd)"
+	exit 1
+fi
+

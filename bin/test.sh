@@ -15,12 +15,6 @@ declare -r ROOT_DIR="$(realpath "$(dirname "$(realpath "${0}")")/..")"
 source "${ROOT_DIR}/bin/common.sh"
 
 function testPlasmoid() {
-	local -r applet_dir="$(findAppletSrcDir "$(pwd)")"
-	if [[ -z "${applet_dir}" ]]; then
-		echo "*** Unable to locate applet source dir from $(pwd)"
-		exit 1
-	fi
-
 	# https://stackoverflow.com/questions/41409273/file-line-and-function-for-qml-files
 	# https://doc.qt.io/qt-5/qtglobal.html#qSetMessagePattern
 	#export QT_MESSAGE_PATTERN="[%{type}] %{appname} (%{file}:%{line}) - %{message}"
@@ -32,13 +26,13 @@ function testPlasmoid() {
 
 	if [[ $# -ge 1 ]]; then
 		echo "Running FullRepresentation"
-		plasmoidviewer --applet "${ROOT_DIR}/src"
+		plasmoidviewer --applet "${PLASMOID_ROOT}"
 	else
 		echo "Running CompactRepresentation"
 		plasmoidviewer \
     		--formfactor vertical \
 		    --location topedge \
-			--applet "${applet_dir}" \
+			--applet "${PLASMOID_ROOT}" \
 		    --size 140X150 
 
 			# --applet "${ROOT_DIR}/src"

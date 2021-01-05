@@ -17,17 +17,11 @@ declare -r ROOT_DIR="$(realpath "$(dirname "$(realpath "${0}")")/..")"
 source "${ROOT_DIR}/bin/common.sh"
 
 function installPlasmoid() {
-	local -r applet_dir="$(findAppletSrcDir "$(pwd)")"
-	if [[ -z "${applet_dir}" ]]; then
-		echo "*** Unable to locate applet source dir from $(pwd)"
-		exit 1
-	fi
-
 	local -r plasmoid_file_name="$(getPlasmoidFileName)"
 
 	local -r tmp="$(mktemp -d "/tmp/${plasmoid_file_name}.XXXXXX")"
 	local -r target_plasmoid_file="$(mktemp -u "/tmp/${plasmoid_file_name}.plasmoid.XXXXXX")"
-	cp -a "${applet_dir}"/* "${tmp}"
+	cp -a "${PLASMOID_ROOT}"/* "${tmp}"
 
 	dumpMeta > "${tmp}/contents/js/meta.js"
 
