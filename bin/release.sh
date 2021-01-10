@@ -23,7 +23,7 @@ function releasePlasmoid() {
 	fi
 
 	local -r tmp="$(mktemp -d "/tmp/${plasmoid_file_name}.XXXXXX")"
-	cp -a "${APPLET_ROOT}"/* "${tmp}"
+	cp -a "${PLASMOID_ROOT}"/* "${tmp}"
 
 	dumpMeta > "${tmp}/contents/js/meta.js"
 
