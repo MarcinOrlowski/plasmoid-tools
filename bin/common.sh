@@ -23,7 +23,7 @@ set -euo pipefail
 
 function getMetaTag() {
 	local -r tag="${1:-}"
-	local -r meta_file="${2:-${ROOT_DIR}/src/metadata.desktop}"
+	local -r meta_file="${2:-${PLASMOID_ROOT}/metadata.desktop}"
 	
 	echo "$(grep "^${tag}=" < "${meta_file}" | awk '{split($0,a,"="); print a[2]}')"
 }
