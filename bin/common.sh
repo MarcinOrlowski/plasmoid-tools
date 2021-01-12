@@ -7,9 +7,6 @@
 # @license   http://www.opensource.org/licenses/mit-license.php MIT
 # @link      https://github.com/MarcinOrlowski/plasmoid-tools
 #
-# Runs plasmoid in plasmoidviewer. Pass any argument to run in FullRepresentation,
-# otherwise CompactReperesentation is used.
-#
 # Usage:
 # ------
 # # shellcheck disable=SC2155
@@ -40,6 +37,7 @@ function dumpMeta() {
 	local -r project_name="$(getMetaTag "Name")"
 	local -r project_url="$(getMetaTag "X-KDE-PluginInfo-Website")"
 	local -r update_checker_url="$(getMetaTag "X-KDE-PluginInfo-UpdateChecker-Url")"
+	local -r first_release_year="$(getMetaTag "X-KDE-PluginInfo-FirstReleaseYear")"
 
 #	local -r pkg_name="$(getMetaTag "X-KDE-PluginInfo-Name")"
 #	local -r pkg_base_name=$(echo "${pkg_name}" | awk '{cnt=split($0,a,"."); print a[cnt]}')
@@ -55,18 +53,19 @@ function dumpMeta() {
 #	echo "  AUTHOR_NAME: ${author_name}"
 #	echo "   AUTHOR_URL: ${author_url}"
 
-	echo -e "var version=\"${pkg_version}\"\n"\
-			"var title=\"${project_name}\"\n"\
-			"var url=\"${project_url}\"\n"\
-			"var authorName=\"${author_name}\"\n"\
-			"var authorUrl=\"${author_url}\"\n" \
-			"var updateCheckerUrl=\"${update_checker_url}\"\n"
+	echo -e \
+"var version=\"${pkg_version}\"\n" \
+"var title=\"${project_name}\"\n" \
+"var url=\"${project_url}\"\n" \
+"var authorName=\"${author_name}\"\n" \
+"var authorUrl=\"${author_url}\"\n" \
+"var updateCheckerUrl=\"${update_checker_url}\"\n" \
+"var firstReleaseYear=\"${first_release_year}\"\n"
 }
 
 # ----------------------------------------------------------
 
-function findAppletSrcDir()
-{
+function findAppletSrcDir() {
 	local dir="${1}"
 	local result=""
 	while [[ -z "${result}" && "${dir}" != "/" ]]; do
