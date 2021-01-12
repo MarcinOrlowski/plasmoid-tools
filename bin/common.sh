@@ -18,18 +18,28 @@ set -euo pipefail
 
 # ----------------------------------------------------------
 
+# Reads given tag from meta file. If tag is not present or empty returns
+# ${default} (which is empty string if not provided).
+#
+# Arguments:
+#        tag: tag to look for in metadata file
+#    default: value to return if tag is not found or empty string
+#  meta_file: path to metadata file (falls back to PLASMOID_ROOT located)
+#
 function getMetaTag() {
 	local -r tag="${1:-}"
-	local -r meta_file="${2:-${PLASMOID_ROOT}/metadata.desktop}"
+	local -r default="${2:-}"
+	local -r meta_file="${3:-${PLASMOID_ROOT}/metadata.desktop}"
 	
 	echo "$(grep "^${tag}=" < "${meta_file}" | awk '{split($0,a,"="); print a[2]}')"
 }
 
 # ----------------------------------------------------------
 
-# Echos some data from metadata.desktop file as JS code. 
+# Echos some data from metadata.desktop file as JS code.
 # This is to work around limitation of QML not exporting
-# metadata unless post v5.76 of framework
+# metadata unless post v5.76 of KDE QML framework.
+#
 function dumpMeta() {
 	local -r pkg_version="$(getMetaTag "X-KDE-PluginInfo-Version")"
 	local -r author_name="$(getMetaTag "X-KDE-PluginInfo-Author")"
@@ -39,20 +49,6 @@ function dumpMeta() {
 	local -r update_checker_url="$(getMetaTag "X-KDE-PluginInfo-UpdateChecker-Url")"
 	local -r first_release_year="$(getMetaTag "X-KDE-PluginInfo-FirstReleaseYear")"
 
-#	local -r pkg_name="$(getMetaTag "X-KDE-PluginInfo-Name")"
-#	local -r pkg_base_name=$(echo "${pkg_name}" | awk '{cnt=split($0,a,"."); print a[cnt]}')
-#	local -r plasmoid_path="$(pwd)"
-#	local -r plasmoid_file_name="${pkg_base_name}-${pkg_version}.plasmoid"
-
-# NOTE: redirect to stderr if in need of showing these!
-#	echo "  OUTPUT_FILE: ${plasmoid_file_name}"
-#	echo "     PKG_NAME: ${pkg_name}"
-#	echo " PROJECT_NAME: ${project_name}"
-#	echo "  PROJECT_URL: ${project_url}"
-#	echo "      VERSION: ${pkg_version}"
-#	echo "  AUTHOR_NAME: ${author_name}"
-#	echo "   AUTHOR_URL: ${author_url}"
-
 	echo -e \
 "var version=\"${pkg_version}\"\n" \
 "var title=\"${project_name}\"\n" \
@@ -61,17 +57,33 @@ function dumpMeta() {
 "var authorUrl=\"${author_url}\"\n" \
 "var updateCheckerUrl=\"${update_checker_url}\"\n" \
 "var firstReleaseYear=\"${first_release_year}\"\n"
+
 }
 
 # ----------------------------------------------------------
 
+# Looks for a plasmoid valid root folder. Starts from ${dir}
+# then goes up untill root folder is reached.
+#
+# Note: by convention used, it first looks for "src/" folder
+# in given folder, then checks if it contains metadata.desktop
+# file. If it does, this is our valid root folder.
+#
+# Arguments:
+#  dir: path to start from. Usually $(pwd)
+#
 function findAppletSrcDir() {
 	local dir="${1}"
+
 	local result=""
 	while [[ -z "${result}" && "${dir}" != "/" ]]; do
 		if [[ -d "${dir}/src" ]]; then
-			result="$(realpath "${dir}/src")"
-		else
+			if [[ -f "${dir}/src/metadata.desktop" ]]; then
+				result="$(realpath "${dir}/src")"
+			fi
+		fi
+
+		if [[ -z "${result}" ]]; then
 			dir="$(dirname "${dir}")"
 		fi
 	done
