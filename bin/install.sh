@@ -17,7 +17,7 @@ declare -r ROOT_DIR="$(realpath "$(dirname "$(realpath "${0}")")/..")"
 source "${ROOT_DIR}/bin/common.sh"
 
 function installPlasmoid() {
-	local -r plasmoid_file_name="$(getPlasmoidFileName)"
+	local -r plasmoid_file_name="$(buildPlasmoidFileName)"
 
 	local -r tmp="$(mktemp -d "/tmp/${plasmoid_file_name}.XXXXXX")"
 	local -r target_plasmoid_file="$(mktemp -u "/tmp/${plasmoid_file_name}.plasmoid.XXXXXX")"

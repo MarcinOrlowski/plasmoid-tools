@@ -15,7 +15,7 @@ declare -r ROOT_DIR="$(realpath "$(dirname "$(realpath "${0}")")/..")"
 source "${ROOT_DIR}/bin/common.sh"
 
 function releasePlasmoid() {
-	local -r plasmoid_file_name="$(getPlasmoidFileName)"
+	local -r plasmoid_file_name="$(buildPlasmoidFileName)"
 	local -r target_file="$(pwd)/${plasmoid_file_name}"
 	if [[ -f "${target_file}" ]]; then
 		echo "*** File already exists: ${target_file}"
