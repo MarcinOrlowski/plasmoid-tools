@@ -49,14 +49,19 @@ function dumpMeta() {
 	local -r update_checker_url="$(getMetaTag "X-KDE-PluginInfo-UpdateChecker-Url")"
 	local -r first_release_year="$(getMetaTag "X-KDE-PluginInfo-FirstReleaseYear")"
 
+	if [[ -z "${first_release_year}" ]]; then
+		first_release_year=1980
+	fi
+
 	echo -e \
-"var version=\"${pkg_version}\"\n" \
-"var title=\"${project_name}\"\n" \
-"var url=\"${project_url}\"\n" \
-"var authorName=\"${author_name}\"\n" \
-"var authorUrl=\"${author_url}\"\n" \
-"var updateCheckerUrl=\"${update_checker_url}\"\n" \
-"var firstReleaseYear=\"${first_release_year}\"\n"
+"// This file is auto-generated. DO NOT EDIT BY HAND\n"\
+"var version=\"${pkg_version}\"\n"\
+"var title=\"${project_name}\"\n"\
+"var url=\"${project_url}\"\n"\
+"var authorName=\"${author_name}\"\n"\
+"var authorUrl=\"${author_url}\"\n"\
+"var updateCheckerUrl=\"${update_checker_url}\"\n"\
+"var firstReleaseYear=${first_release_year}\n"
 
 }
 
@@ -93,7 +98,11 @@ function findAppletSrcDir() {
 
 # ----------------------------------------------------------
 
-function getPlasmoidFileName() {
+# Builds plasmoid target file name based on medata.desktop content
+#
+# File name format: ${name}-${version}.plasmoid
+#
+function buildPlasmoidFileName() {
 	local -r pkg_version="$(getMetaTag "X-KDE-PluginInfo-Version")"
 	local -r pkg_name="$(getMetaTag "X-KDE-PluginInfo-Name")"
 	local -r pkg_base_name=$(echo "${pkg_name}" | awk '{cnt=split($0,a,"."); print a[cnt]}')
@@ -110,15 +119,6 @@ function getPlasmoidFileName() {
 function escape() {
 	local -r str="${1:-}"
 	echo $(echo "${str}" | sed -e 's/[]\/$*.^[]/\\&/g')
-}
-
-# ----------------------------------------------------------
-
-function getPlasmoidFileName() {
-	local -r pkg_version="$(getMetaTag "X-KDE-PluginInfo-Version")"
-	local -r pkg_name="$(getMetaTag "X-KDE-PluginInfo-Name")"
-	local -r pkg_base_name=$(echo "${pkg_name}" | awk '{cnt=split($0,a,"."); print a[cnt]}')
-	echo "${pkg_base_name}-${pkg_version}.plasmoid"
 }
 
 # ----------------------------------------------------------
