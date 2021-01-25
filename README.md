@@ -28,10 +28,12 @@ and added following aliases to my `~/.config/fish/config.fish`:
 ```
 alias otest "<TOOLS_DIR>/bin/test.sh"
 alias oinstall "<TOOLS_DIR>/bin/install.sh"
+alias orelease "<TOOLS_DIR>/bin/release.sh"
+alias ometa "<TOOLS_DIR>/bin/meta.sh"
 ```
 
 ## License ##
 
  * Written and copyrighted &copy;2020-2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
- * Weekday Grid widget is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+ * Plasmoid Tools is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
