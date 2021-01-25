@@ -16,5 +16,7 @@ set -euo pipefail
 declare -r ROOT_DIR="$(realpath "$(dirname "$(realpath "${0}")")/..")"
 source "${ROOT_DIR}/bin/common.sh"
 
-dumpMeta > "${PLASMOID_ROOT}/contents/js/meta.js"
+declare -r meta_file="${PLASMOID_ROOT}/contents/js/meta.js"
+dumpMeta > "${meta_file}"
 
+echo "Meta data file created: ${meta_file}"
