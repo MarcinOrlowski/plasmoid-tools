@@ -54,8 +54,12 @@ function dumpMeta() {
 	local -r update_checker_url="$(getMetaTag "X-KDE-PluginInfo-UpdateChecker-Url")"
 	local -r first_release_year="$(getMetaTag "X-KDE-PluginInfo-FirstReleaseYear" 1980)"
 
-	echo -e \
+	echo -e\
 "// This file is auto-generated. DO NOT EDIT BY HAND\n"\
+"\n"\
+"// https://doc.qt.io/qt-5/qtqml-javascript-resources.html\n"\
+".pragma library\n"\
+"\n"\
 "var version=\"${pkg_version}\"\n"\
 "var title=\"${project_name}\"\n"\
 "var url=\"${project_url}\"\n"\
