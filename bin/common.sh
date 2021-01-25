@@ -61,13 +61,13 @@ function dumpMeta() {
 "// https://doc.qt.io/qt-5/qtqml-javascript-resources.html\n"\
 ".pragma library\n"\
 "\n"\
-"var version=\"${_pkg_version}\"\n"\
-"var title=\"${_project_name}\"\n"\
-"var url=\"${_project_url}\"\n"\
-"var authorName=\"${_author_name}\"\n"\
-"var authorUrl=\"${_author_url}\"\n"\
-"var updateCheckerUrl=\"${_update_checker_url}\"\n"\
-"var firstReleaseYear=${_first_release_year}\n"
+"const version=\"${_pkg_version}\"\n"\
+"const title=\"${_project_name}\"\n"\
+"const url=\"${_project_url}\"\n"\
+"const authorName=\"${_author_name}\"\n"\
+"const authorUrl=\"${_author_url}\"\n"\
+"const updateCheckerUrl=\"${_update_checker_url}\"\n"\
+"const firstReleaseYear=${_first_release_year}\n"
 }
 
 # ----------------------------------------------------------
