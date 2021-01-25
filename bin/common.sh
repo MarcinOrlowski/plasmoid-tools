@@ -30,8 +30,13 @@ function getMetaTag() {
 	local -r tag="${1:-}"
 	local -r default="${2:-}"
 	local -r meta_file="${3:-${PLASMOID_ROOT}/metadata.desktop}"
-	
-	echo "$(grep "^${tag}=" < "${meta_file}" | awk '{split($0,a,"="); print a[2]}')"
+
+	local result="$(grep "^${tag}=" < "${meta_file}" | awk '{split($0,a,"="); print a[2]}')"
+	if [[ -z "${result}" ]]; then
+		result="${default}"
+	fi
+
+	echo "${result}"
 }
 
 # ----------------------------------------------------------
@@ -47,11 +52,7 @@ function dumpMeta() {
 	local -r project_name="$(getMetaTag "Name")"
 	local -r project_url="$(getMetaTag "X-KDE-PluginInfo-Website")"
 	local -r update_checker_url="$(getMetaTag "X-KDE-PluginInfo-UpdateChecker-Url")"
-	local -r first_release_year="$(getMetaTag "X-KDE-PluginInfo-FirstReleaseYear")"
-
-	if [[ -z "${first_release_year}" ]]; then
-		first_release_year=1980
-	fi
+	local -r first_release_year="$(getMetaTag "X-KDE-PluginInfo-FirstReleaseYear" 1980)"
 
 	echo -e \
 "// This file is auto-generated. DO NOT EDIT BY HAND\n"\
