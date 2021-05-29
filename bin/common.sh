@@ -139,3 +139,22 @@ if [[ -z "${PLASMOID_ROOT}" ]]; then
 	exit 1
 fi
 
+# ----------------------------------------------------------
+
+source "${ROOT_DIR}/bin/colors.sh"
+
+# ----------------------------------------------------------
+
+##############################################################################
+#
+# Shows given error message and then terminates script execution with exit 
+# code 1.
+#
+# Arguments:
+#	      msg: Optional message string to show. Default "Aborted"
+#
+function abort {
+	echo -e "${ERROR}*** ${1:-Aborted.}"
+	exit 1
+}
+

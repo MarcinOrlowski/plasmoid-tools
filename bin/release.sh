@@ -16,11 +16,12 @@ source "${ROOT_DIR}/bin/common.sh"
 
 function releasePlasmoid() {
 	local -r plasmoid_file_name="$(buildPlasmoidFileName)"
-	local -r target_file="$(pwd)/${plasmoid_file_name}"
-	if [[ -f "${target_file}" ]]; then
-		echo "*** File already exists: ${target_file}"
-		exit 1
-	fi
+	local target_dir="$(pwd)"
+	local -r rel_dir="${target_dir}/release"
+	[[ -w "${rel_dir}" ]] && target_dir="${rel_dir}"
+
+	local -r target_file="${rel_dir}/${plasmoid_file_name}"
+	[[ -f "${target_file}" ]] && abort "File already exists: ${target_file}"
 
 	local -r tmp="$(mktemp -d "/tmp/${plasmoid_file_name}.XXXXXX")"
 	cp -a "${PLASMOID_ROOT}"/* "${tmp}"
@@ -29,10 +30,11 @@ function releasePlasmoid() {
 
 	pushd "${tmp}" > /dev/null
 	zip -q -r "${target_file}" -- *
-	ls -ld "${target_file}"
 	popd > /dev/null
 
 	rm -rf "${tmp}"
+
+	echo "Plasmoid archive saved: ${target_file}"
 }
 
 releasePlasmoid
