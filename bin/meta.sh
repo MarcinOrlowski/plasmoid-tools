@@ -17,6 +17,7 @@ declare -r ROOT_DIR="$(realpath "$(dirname "$(realpath "${0}")")/..")"
 source "${ROOT_DIR}/bin/common.sh"
 
 declare -r meta_file="${PLASMOID_ROOT}/contents/js/meta.js"
+mkdir -p "$(dirname "${meta_file}")"
 dumpMeta > "${meta_file}"
 
 echo "Meta data file created: ${meta_file}"
