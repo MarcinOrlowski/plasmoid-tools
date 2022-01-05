@@ -67,6 +67,6 @@ alias ometa "<TOOLS_DIR>/bin/meta.sh"
 
 ## License ##
 
- * Written and copyrighted &copy;2020-2021 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
+ * Written and copyrighted &copy;2020-2022 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
  * Plasmoid Tools is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
 
