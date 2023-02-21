@@ -22,7 +22,6 @@ function TPUT {
 	# We need to have $TERM set otherwise tput would fail
 	# When invoked by cron, we may or may not have it so...
 	if [[ -n "${TERM:-}" && "${TERM}" != "dumb" ]]; then
-	    echo tput "${1:-}" ${2:-} ${3:-}
 		tput "${1:-}" ${2:-} ${3:-}
 	else
 		echo -n ""
