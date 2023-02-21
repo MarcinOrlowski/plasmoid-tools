@@ -1,5 +1,8 @@
 # Changelog
 
+* v1.1.2 (2023-02-21)
+  * Corrected usage of `tput`.
+
 * v1.1.1 (2022-01-05)
   * `meta.sh` now also creates targetd directory.
 
