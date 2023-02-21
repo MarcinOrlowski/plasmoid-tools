@@ -2,7 +2,7 @@
 # KDE Plasma Applets Developer Tools
 #
 # @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
-# @copyright 2020-2022 Marcin Orlowski
+# @copyright 2020-2023 Marcin Orlowski
 # @license   http://www.opensource.org/licenses/mit-license.php MIT
 # @link      https://github.com/MarcinOrlowski/plasmoid-tools
 #
@@ -22,7 +22,8 @@ function TPUT {
 	# We need to have $TERM set otherwise tput would fail
 	# When invoked by cron, we may or may not have it so...
 	if [[ -n "${TERM:-}" && "${TERM}" != "dumb" ]]; then
-		tput "${1:-}" "${2:-}" "${3:-}"
+	    echo tput "${1:-}" ${2:-} ${3:-}
+		tput "${1:-}" ${2:-} ${3:-}
 	else
 		echo -n ""
 	fi
