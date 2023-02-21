@@ -3,11 +3,11 @@
 # KDE Plasma Applets Developer Tools
 #
 # @author    Marcin Orlowski <mail (#) marcinOrlowski (.) com>
-# @copyright 2020-2022 Marcin Orlowski
+# @copyright 2020-2023 Marcin Orlowski
 # @license   http://www.opensource.org/licenses/mit-license.php MIT
 # @link      https://github.com/MarcinOrlowski/plasmoid-tools
 #
-# Creates <PLASMOID_ROOT>/contents/js/meta.js file
+# Creates <PLASMOID_ROOT>/contents/js/meta.js file with plasmoid metadata.
 #
 
 set -euo pipefail
