@@ -30,16 +30,17 @@ function installPlasmoid() {
 	popd > /dev/null
 	rm -rf "${tmp}"
 
-	local -r user_home_dir="$(eval echo "~${USER}")"
 	local -r pkg_name="$(getMetaTag "X-KDE-PluginInfo-Name")"
-	if [[ -d "${user_home_dir}/.local/share/plasma/plasmoids/${pkg_name}" ]]; then
+	local -r install_dir="${HOME}/.local/share/plasma/plasmoids/${pkg_name}"
+	if kpackagetool6 -t Plasma/Applet --list | grep -q "^${pkg_name}$"; then
 		kpackagetool6 -t Plasma/Applet --upgrade "${target_plasmoid_file}"
 	else
+		[[ -d "${install_dir}" ]] && rm -rf "${install_dir}"
 		kpackagetool6 -t Plasma/Applet --install "${target_plasmoid_file}"
 	fi
 
 	kquitapp6 plasmashell
-	kstart6 plasmashell
+	kstart plasmashell
 
 	rm -f "${target_plasmoid_file}"
 }
