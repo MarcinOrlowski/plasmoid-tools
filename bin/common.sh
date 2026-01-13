@@ -18,20 +18,44 @@ set -euo pipefail
 
 # ----------------------------------------------------------
 
-# Reads given tag from meta file. If tag is not present or empty returns
-# ${default} (which is empty string if not provided).
+# Reads given tag from metadata.json. Maps legacy Plasma 5 tag names to Plasma 6 JSON paths.
+# If tag is not present or empty, returns ${default} (empty string if not provided).
 #
 # Arguments:
-#        tag: tag to look for in metadata file
+#        tag: tag to look for (supports legacy X-KDE-PluginInfo-* names)
 #    default: value to return if tag is not found or empty string
-#  meta_file: path to metadata file (falls back to PLASMOID_ROOT located)
+#  meta_file: path to metadata.json (falls back to PLASMOID_ROOT located)
 #
 function getMetaTag() {
 	local -r _tag="${1:-}"
 	local -r _default="${2:-}"
-	local -r _meta_file="${3:-${PLASMOID_ROOT}/metadata.desktop}"
+	local -r _meta_file="${3:-${PLASMOID_ROOT}/metadata.json}"
 
-	local _result="$(grep "^${_tag}=" < "${_meta_file}" | awk '{split($0,a,"="); print a[2]}')"
+	local _jq_path=""
+	case "${_tag}" in
+		"X-KDE-PluginInfo-Version")
+			_jq_path=".KPlugin.Version"
+			;;
+		"X-KDE-PluginInfo-Name")
+			_jq_path=".KPlugin.Id"
+			;;
+		"X-KDE-PluginInfo-Author")
+			_jq_path=".KPlugin.Authors[0].Name"
+			;;
+		"Name")
+			_jq_path=".KPlugin.Name"
+			;;
+		"X-KDE-PluginInfo-Website")
+			_jq_path=".KPlugin.Website"
+			;;
+		*)
+			# Custom fields stored at top level with original key name
+			_jq_path=".\"${_tag}\""
+			;;
+	esac
+
+	local _result
+	_result="$(jq -r "${_jq_path} // empty" < "${_meta_file}" 2>/dev/null)"
 	if [[ -z "${_result}" ]]; then
 		_result="${_default}"
 	fi
@@ -41,9 +65,9 @@ function getMetaTag() {
 
 # ----------------------------------------------------------
 
-# Echos some data from metadata.desktop file as JS code.
+# Echos some data from metadata.json file as JS code.
 # This is to work around limitation of QML not exporting
-# metadata unless post v5.76 of KDE QML framework.
+# all metadata fields conveniently.
 #
 function dumpMeta() {
 	local -r _pkg_version="$(getMetaTag "X-KDE-PluginInfo-Version")"
@@ -58,7 +82,7 @@ function dumpMeta() {
 "// This file is auto-generated. DO NOT EDIT BY HAND\n"\
 "// Generated: $(date --iso-8601=seconds)\n"\
 "\n"\
-"// https://doc.qt.io/qt-5/qtqml-javascript-resources.html\n"\
+"// https://doc.qt.io/qt-6/qtqml-javascript-resources.html\n"\
 ".pragma library\n"\
 "\n"\
 "const version=\"${_pkg_version}\"\n"\
@@ -76,7 +100,7 @@ function dumpMeta() {
 # then goes up untill root folder is reached.
 #
 # Note: by convention used, it first looks for "src/" folder
-# in given folder, then checks if it contains metadata.desktop
+# in given folder, then checks if it contains metadata.json
 # file. If it does, this is our valid root folder.
 #
 # Arguments:
@@ -88,7 +112,7 @@ function findAppletSrcDir() {
 	local _result=""
 	while [[ -z "${_result}" && "${_dir}" != "/" ]]; do
 		if [[ -d "${_dir}/src" ]]; then
-			if [[ -f "${_dir}/src/metadata.desktop" ]]; then
+			if [[ -f "${_dir}/src/metadata.json" ]]; then
 				_result="$(realpath "${_dir}/src")"
 			fi
 		fi
@@ -103,7 +127,7 @@ function findAppletSrcDir() {
 
 # ----------------------------------------------------------
 
-# Builds plasmoid target file name based on medata.desktop content
+# Builds plasmoid target file name based on metadata.json content
 #
 # File name format: ${_name}-${_version}.plasmoid
 #
@@ -142,6 +166,14 @@ fi
 # ----------------------------------------------------------
 
 source "${ROOT_DIR}/bin/colors.sh"
+
+# ----------------------------------------------------------
+
+# Check for required dependencies
+if ! command -v jq &> /dev/null; then
+	echo "*** jq is required but not installed. Install with: sudo apt install jq"
+	exit 1
+fi
 
 # ----------------------------------------------------------
 
