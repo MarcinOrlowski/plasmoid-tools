@@ -1,8 +1,8 @@
 ![Logo](img/logo.png)
 
-# KDE QML/Plasma Applet Developer Tools #
+# KDE Plasma 6 Applet Developer Tools #
 
-Helper tools and scripts I wrote to help me while working on KDE QML Plasmoids (widgets).
+Helper tools and scripts to help while working on KDE Plasma 6 Plasmoids (widgets).
 
 # Tools #
 
@@ -13,10 +13,10 @@ directory **must** be one of plasmoid's directories. You currently cannot manual
 specify where plasmoid is manually, but that's mostly because I do not work that way
 and it was not needed by my workflow (adding support for that is trivial though).
 
-# Determinig plasmoid root directory #
+# Determining plasmoid root directory #
 
 When you invoke i.e. `test.sh` script, it will try to determine root folder of the plasmoid.
-This is done by looking for `metadata.desktop` file in current directory. If file is not
+This is done by looking for `metadata.json` file in current directory. If file is not
 present, the parent dir is checked and so on.
 
 # Tools #
@@ -29,10 +29,10 @@ Available tools:
   any will work, i.e. `test.sh foo`), will run you plasmoid as it is installed as
   desktop widget (so `FullRepresentation` should kick in).
 * `meta.sh`: This is my work around for Plasma API not exposing metadata file content
-  in any other way. It parses project's `metadata.desktop` and creates `/contents/js/meta.js`
+  in any other way. It parses project's `metadata.json` and creates `/contents/js/meta.js`
   containing extracted information, that can be later imported and used in your JavaScript
-  code. Currently exposes metadata's `X-KDE-PluginInfo-Version` as `version`,
-  `Name` as `name`, `X-KDE-PluginInfo-Website` as `url`, `X-KDE-PluginInfo-Author` as `authorName`.
+  code. Currently exposes metadata's `KPlugin.Version` as `version`,
+  `KPlugin.Name` as `title`, `KPlugin.Website` as `url`, `KPlugin.Authors[0].Name` as `authorName`.
   It also looks for additional, non-standard fields: `X-KDE-PluginInfo-Author-Url` (exported
   as `authorUrl`), `X-KDE-PluginInfo-UpdateChecker-Url` (exported as `updateCheckerUrl`) and
   `X-KDE-PluginInfo-FirstReleaseYear` exported as `firstReleaseYear`.
@@ -40,9 +40,13 @@ Available tools:
   folderm then restarts plasmashell. Please note it will upgrade existing installation
   without any confirmation. Note: it automatically updates `meta.js` file.
 * `release.sh`: packs plasmoid sources and creates release file. Target file name is
-  going to be `PACKAGE-VERSION.plasmoid` and  constructed using `metadata.desktop` information.
+  going to be `PACKAGE-VERSION.plasmoid` and  constructed using `metadata.json` information.
   Note: it automatically updates `meta.js` file.
 
+
+# Dependencies #
+
+* `jq` - JSON parser (install with `sudo apt install jq`)
 
 # Installation #
 
@@ -67,5 +71,5 @@ alias ometa "<TOOLS_DIR>/bin/meta.sh"
 
 ## License ##
 
-* Written and copyrighted &copy;2020-2023 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
+* Written and copyrighted &copy;2020-2026 by Marcin Orlowski <mail (#) marcinorlowski (.) com>
 * Plasmoid Tools is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).

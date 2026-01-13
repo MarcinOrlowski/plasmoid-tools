@@ -1,5 +1,9 @@
 # Changelog
 
+* v2.0.0 (2026-01-13)
+  * Migrated to Plasma 6 (metadata.json, kpackagetool6, kquitapp6, kstart).
+  * Added `jq` as required dependency for JSON parsing.
+
 * v1.1.2 (2023-02-21)
   * Corrected usage of `tput`.
 
